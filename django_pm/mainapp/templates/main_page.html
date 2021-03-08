@@ -2,9 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>React AppTest</title>
+    <title>Django_pm</title>
   </head>
   <body>
     <h1> Тест текст </h1>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <button> Нажми меня</button>
+    </form>
   </body>
 </html>
