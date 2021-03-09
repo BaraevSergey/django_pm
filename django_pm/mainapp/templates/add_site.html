@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Django_pm</title>
+  </head>
+  <body>
+    <form method="POST" action="after_add">
+      {% csrf_token %}
+      <input name="site"/>
+      <input name="login"/>
+      <input name="password"/>
+      <button> Добавить сайт </button>
+    </form>
+  </body>
+</html>
