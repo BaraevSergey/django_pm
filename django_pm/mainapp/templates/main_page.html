@@ -8,6 +8,15 @@
     <h1> Тест текст </h1>
     <form method="POST" action="add_site">
       {% csrf_token %}
+      {% for site in all_sites%}
+      <table>
+        <tr>
+          <td> {{site.name}} </td>
+          <td> {{site.login}} </td>
+          <td> {{site.password}} </td>
+        </tr>
+       </table>
+      {% endfor %}
       <button> Нажми меня</button>
     </form>
   </body>

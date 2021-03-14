@@ -5,11 +5,9 @@
     <title>Django_pm</title>
   </head>
   <body>
-    <form method="POST" action="after_add">
+    <form method="POST" action="add_info">
       {% csrf_token %}
-      <input name="site"/>
-      <input name="login"/>
-      <input name="password"/>
+      {{ form }}
       <button> Добавить сайт </button>
     </form>
   </body>
