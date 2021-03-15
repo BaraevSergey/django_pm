@@ -21,5 +21,6 @@ urlpatterns = [
     path('main', views.main_page),
     path('add_site', views.open_add_site),
     path('add_info', views.add_info),
-    path('', views.redirect_main)
+    path('login', views.login_page),
+    path('', views.redirect_login)
 ]

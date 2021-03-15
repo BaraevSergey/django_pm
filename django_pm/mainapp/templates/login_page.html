@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Django_pm</title>
+  </head>
+  <body>
+    <form method="POST" action="main">
+      {% csrf_token %}
+      {{ form }}
+      <button> Войти</button>
+    </form>
+  </body>
+</html>
+ 
