@@ -8,6 +8,15 @@ from .forms import LoginForm
 from .forms import RegisterForm
 
 # Create your views here.
+
+def authority(request):
+    log_info = request.POST.get("login", "")
+    temp = LogInfo.objects.all().filter(login = log_info)
+    if len(temp) != 0 : # осиановился тут 
+        return redirect(main_page)
+    else:
+        return redirect(login_page)
+
 def main_page(request):
     all_sites = SiteInfo.objects.all()
     return render (request, 'main_page.html', {"all_sites": all_sites}  )
@@ -45,3 +54,4 @@ def registration(request):
     B = LogInfo(login = request.POST.get("login", ""),
         password = request.POST.get("password", ""))
     B.save()
+    return redirect(login_page)
