@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from mainapp.models import SiteInfo
+from mainapp.models import LogInfo
 from .forms import InputForm
 from .forms import LoginForm
 from .forms import RegisterForm
@@ -39,3 +40,8 @@ def register_page(request):
     form = RegisterForm()
     return render(request, 'register_page.html', {'form' : form})
 
+
+def registration(request):
+    B = LogInfo(login = request.POST.get("login", ""),
+        password = request.POST.get("password", ""))
+    B.save()
