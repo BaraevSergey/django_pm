@@ -12,7 +12,7 @@ from .forms import RegisterForm
 def authority(request):
     log_info = request.POST.get("login", "")
     temp = LogInfo.objects.all().filter(login = log_info)
-    if len(temp) != 0 : # осиановился тут 
+    if len(temp) != 0 : # остановился тут 
         return redirect(main_page)
     else:
         return redirect(login_page)
