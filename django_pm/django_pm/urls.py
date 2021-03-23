@@ -25,5 +25,5 @@ urlpatterns = [
     path('register', views.register_page),
     path('authority', views.authority),
     path('add_register', views.registration),
-    path('', views.redirect_login)
+    path('', views.login_page)
 ]

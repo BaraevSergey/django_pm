@@ -56,9 +56,6 @@ def open_add_site(request):
     form = InputForm()
     return render (request, 'add_site.html', {'form': form})
 
-def redirect_login(request):
-    return redirect(login_page)
-
 def login_page(request):
     form = LoginForm()
     return render(request, 'login_page.html', {'form' : form})
@@ -81,7 +78,7 @@ def registration(request): #регистрация
             return redirect(login_page) #редиректнуть потом на основную страницу, не логин page
         else:
             return redirect(register_page)
-            pass #пока так, тут надо сказать юзеру что его пара логин пароль некорректны и надо чтобы они были равны
+            #пока так, тут надо сказать юзеру что его пара логин пароль некорректны и надо чтобы они были равны
     else:
         return redirect(register_page)
-        pass #алерт о логине существующем
+        #алерт о логине существующем
