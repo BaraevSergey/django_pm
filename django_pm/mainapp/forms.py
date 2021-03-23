@@ -13,3 +13,5 @@ class RegisterForm(forms.Form):
     login = forms.CharField(label="Введите логин", max_length=50)
     password = forms.CharField(label="Введите пароль", max_length=50, min_length=8)
     confirm_pass = forms.CharField(label="Подтвердите пароль", max_length=50, min_length=8)
+
+
