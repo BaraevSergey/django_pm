@@ -20,21 +20,15 @@ def authority(request): #проверка авторизации
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = pass_form)
-            if len(query_list_login) != 0 : # проверяем есть ли такой логин
-                if query_passwords.exists(): #проверяем совпал ли пароль
-                    return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
-                else:
+            if len(query_list_login) != 0 or query_passwords.exists(): # проверяем есть ли такой логин
+                return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
+            else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
                     #тут ещё надо сообщение о том, что авторизация не прошла
-            else:
-                return redirect(login_page) #если логина нет, то бб
         elif 'register_button' in request.POST: #если кнопка регистрации то редиректнем на страницу регистрации
             return redirect(register_page)
 
 
-def main_page(request): #отрисовка мейна 
-    all_sites = SiteInfo.objects.all()
-    return render (request, 'main_page.html', {"all_sites": all_sites}  )
 
 def add_info(request):#добавление сайта со страницы добавления
     if request.method == "POST":
@@ -50,19 +44,9 @@ def add_info(request):#добавление сайта со страницы д�
         return redirect(main_page)
     else: 
         form = InputForm()
-    return render(request, add_info, {'form': form})
+        return redirect(open_add_site)
+    
 
-def open_add_site(request):
-    form = InputForm()
-    return render (request, 'add_site.html', {'form': form})
-
-def login_page(request):
-    form = LoginForm()
-    return render(request, 'login_page.html', {'form' : form})
-
-def register_page(request):
-    form = RegisterForm()
-    return render(request, 'register_page.html', {'form' : form})
 
 
 def registration(request): #регистрация 
@@ -82,3 +66,21 @@ def registration(request): #регистрация
     else:
         return redirect(register_page)
         #алерт о логине существующем
+
+
+
+def open_add_site(request):
+    form = InputForm()
+    return render (request, 'add_site.html', {'form': form})
+
+def login_page(request):
+    form = LoginForm()
+    return render(request, 'login_page.html', {'form' : form})
+
+def register_page(request):
+    form = RegisterForm()
+    return render(request, 'register_page.html', {'form' : form})
+
+def main_page(request, user_key): #отрисовка мейна 
+    all_sites = SiteInfo.objects.all()
+    return render (request, 'main_page.html', {"all_sites": all_sites} )
