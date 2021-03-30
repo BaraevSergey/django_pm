@@ -11,6 +11,7 @@
       {% for site in all_sites%}
       <table>
         <tr>
+          <td name='id' style = "display:none"> {{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
           <td> {{site.key_login}} </td>
           <td> {{site.name}} </td>
           <td> {{site.login}} </td>
@@ -20,12 +21,12 @@
           <td> ******** </td>
           {%endif%}
           <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
-          <td> <button id='edit'> Отредактировать запись </button></td>
-          <td> <button id='delete'> Удалить запись </button></td>
+          <td> <button name='edit'> Отредактировать запись </button></td>
+          <td> <button name='delete'> Удалить запись </button></td>
         </tr>
        </table>
       {% endfor %}
-      <button id='add_site'>Добавить сайт</button>
+      <button name='add_site'>Добавить сайт</button>
     </form>
   </body>
 </html>

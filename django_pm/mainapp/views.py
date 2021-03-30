@@ -72,15 +72,21 @@ def registration(request): #регистрация
         return redirect(register_page)
         #алерт о логине существующем
 
+
 def action_main(request):
     if request.method == "POST":
         if 'add_site' in request.POST: # если нажата кнопка "Войти"
-            return redirect(open_add_site(request))
-        if 'delete' in request.POST:
-            pass
-        if 'edit' in request.POST:
-            pass
-        
+            return redirect(open_add_site)
+        elif 'delete' in request.POST:
+            id = request.POST.get("id")
+            SiteInfo.objects.get.delete(pk=id)
+            return redirect(main_page)
+        elif 'edit' in request.POST:
+            return redirect(main_page)
+        else:
+            return redirect(main_page)
+    else:
+        return redirect(main_page)
 
 def open_add_site(request):
     form = InputForm()
