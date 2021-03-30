@@ -103,4 +103,4 @@ def register_page(request):
 def main_page(request): #отрисовка мейна 
     all_sites = SiteInfo.objects.all()
     view = True
-    return render (request, 'main_page.html', {"all_sites": all_sites, "user_key": request.session['user_key'], "view":view })
+    return render (request, 'main_page.html', {"all_sites": zip(all_sites, range(0, len(all_sites))), "user_key": request.session['user_key'], "view":view})
