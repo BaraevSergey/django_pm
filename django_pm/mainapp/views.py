@@ -20,6 +20,7 @@ def authority(request): #проверка авторизации
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = pass_form)
+            request.session['user_key'] = '1234'            
             if len(query_list_login) != 0 or query_passwords.exists(): # проверяем есть ли такой логин
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
@@ -34,12 +35,16 @@ def add_info(request):#добавление сайта со страницы д�
     if request.method == "POST":
         form = InputForm()
         if form.is_valid:
+            
             name_form = request.POST.get("name", "")
             login_form = request.POST.get("login", "") 
             pass_form = request.POST.get("password", "")
-            B = SiteInfo(name = name_form,
+            B = SiteInfo(
+                key_login = request.session['user_key'],
+                name = name_form,
                 login=login_form, 
-                password = pass_form)
+                password = pass_form
+                )
             B.save()
         return redirect(main_page)
     else: 
@@ -67,7 +72,15 @@ def registration(request): #регистрация
         return redirect(register_page)
         #алерт о логине существующем
 
-
+def action_main(request):
+    if request.method == "POST":
+        if 'add_site' in request.POST: # если нажата кнопка "Войти"
+            return redirect(open_add_site(request))
+        if 'delete' in request.POST:
+            pass
+        if 'edit' in request.POST:
+            pass
+        
 
 def open_add_site(request):
     form = InputForm()
@@ -81,6 +94,7 @@ def register_page(request):
     form = RegisterForm()
     return render(request, 'register_page.html', {'form' : form})
 
-def main_page(request, user_key): #отрисовка мейна 
+def main_page(request): #отрисовка мейна 
     all_sites = SiteInfo.objects.all()
-    return render (request, 'main_page.html', {"all_sites": all_sites} )
+    view = True
+    return render (request, 'main_page.html', {"all_sites": all_sites, "user_key": request.session['user_key'], "view":view })

@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1> Тест текст </h1>
-    <form method="POST" action="add_site">
+    <form method="POST" action="action_main">
       {% csrf_token %}
       {% for site in all_sites%}
       <table>
@@ -14,11 +14,18 @@
           <td> {{site.key_login}} </td>
           <td> {{site.name}} </td>
           <td> {{site.login}} </td>
+          {%if view == True %}
           <td> {{site.password}} </td>
+          {%else%}
+          <td> ******** </td>
+          {%endif%}
+          <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
+          <td> <button id='edit'> Отредактировать запись </button></td>
+          <td> <button id='delete'> Удалить запись </button></td>
         </tr>
        </table>
       {% endfor %}
-      <button>Нажми меня</button>
+      <button id='add_site'>Добавить сайт</button>
     </form>
   </body>
 </html>
