@@ -64,7 +64,8 @@ def registration(request): #регистрация
             B = LogInfo(login = login_form,
                 password = pass_form)
             B.save()
-            return redirect(login_page) #редиректнуть потом на основную страницу, не логин page
+            request.session['user_key'] = '1234'
+            return redirect(main_page)
         else:
             return redirect(register_page)
             #пока так, тут надо сказать юзеру что его пара логин пароль некорректны и надо чтобы они были равны
