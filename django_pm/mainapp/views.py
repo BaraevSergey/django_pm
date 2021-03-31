@@ -6,7 +6,7 @@ from mainapp.models import LogInfo
 from .forms import InputForm
 from .forms import LoginForm
 from .forms import RegisterForm
-
+import hashlib
 # Create your views here.
 
 def authority(request): #проверка авторизации
@@ -35,7 +35,6 @@ def add_info(request):#добавление сайта со страницы д�
     if request.method == "POST":
         form = InputForm()
         if form.is_valid:
-            
             name_form = request.POST.get("name", "")
             login_form = request.POST.get("login", "") 
             pass_form = request.POST.get("password", "")
@@ -58,11 +57,13 @@ def registration(request): #регистрация
     login_form = request.POST.get("login", "")
     pass_form = request.POST.get("password", "")
     confirm_pass_form = request.POST.get("confirm_pass", "")
+    hash_object = hashlib.sha512(confirm_pass_form.encode('utf-8'))
+    hex_dig = hash_object.hexdigest()
     query_list_login = LogInfo.objects.all().filter(login = login_form) #проверяем есть ли такой логин в регистрации
     if len(query_list_login) == 0:
         if confirm_pass_form == pass_form:
             B = LogInfo(login = login_form,
-                password = pass_form)
+                password = hex_dig)
             B.save()
             request.session['user_key'] = '1234'
             return redirect(main_page)

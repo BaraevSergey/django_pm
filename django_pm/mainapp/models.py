@@ -10,7 +10,7 @@ class SiteInfo (models.Model):
         verbose_name_plural="Таблица со всеми сайтами"
 class LogInfo(models.Model):
     login = models.TextField(max_length=50, verbose_name="Логин для авторизации")
-    password = models.TextField(max_length=50, verbose_name="Пароль для авторизации")
+    password = models.TextField(max_length=512, verbose_name="Пароль для авторизации")
     class Meta:
         verbose_name="Таблица всех зарегистрированных пользователей"
         verbose_name_plural="Таблица всех зарегистрированных пользователей"
