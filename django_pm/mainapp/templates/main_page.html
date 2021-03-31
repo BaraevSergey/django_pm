@@ -8,10 +8,10 @@
     <h1> Тест текст </h1>
     <form method="POST" action="action_main">
       {% csrf_token %}
-      {% for site in all_sites%}
+      {% for site, number_row in all_sites%}
       <table>
         <tr>
-          <td name='id' style = "display:none"> {{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
+          <td name='id{{number_row}}' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
           <td> {{site.key_login}} </td>
           <td> {{site.name}} </td>
           <td> {{site.login}} </td>
@@ -21,12 +21,13 @@
           <td> ******** </td>
           {%endif%}
           <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
-          <td> <button name='edit'> Отредактировать запись </button></td>
-          <td> <button name='delete'> Удалить запись </button></td>
+          <td> <button name='edit{{number_row}}' > Отредактировать запись </button></td>
+          <td> <button name='delete{{number_row}}' > Удалить запись </button></td>
         </tr>
        </table>
+      
       {% endfor %}
       <button name='add_site'>Добавить сайт</button>
     </form>
   </body>
-</html>
+</html> 
