@@ -57,8 +57,13 @@ def registration(request): #регистрация
     login_form = request.POST.get("login", "")
     pass_form = request.POST.get("password", "")
     confirm_pass_form = request.POST.get("confirm_pass", "")
+    
+    #хэширование пароля
     hash_object = hashlib.sha512(confirm_pass_form.encode('utf-8'))
     hex_dig = hash_object.hexdigest()
+    hex_dig = hashlib.sha512((hex_dig+pass_form).encode('utf-8')) #соль в виде пароля
+
+    
     query_list_login = LogInfo.objects.all().filter(login = login_form) #проверяем есть ли такой логин в регистрации
     if len(query_list_login) == 0:
         if confirm_pass_form == pass_form:
