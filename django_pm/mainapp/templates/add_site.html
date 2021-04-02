@@ -5,10 +5,20 @@
     <title>Django_pm</title>
   </head>
   <body>
-    <form method="POST" action="add_info">
-      {% csrf_token %}
-      {{ form }}
-      <button> Добавить сайт </button>
-    </form>
+    {%if auth%}
+      <form method="POST" action="add_info">
+        {% csrf_token %}
+        {{ form }}
+        <button> Добавить сайт </button>
+      </form>
+      <form method="POST" action="exit">
+        {% csrf_token %}
+        <button name='exit'>
+          Выход
+        </button>
+      </form>
+    {%else%}
+      Нет авторизации
+    {%endif%}
   </body>
 </html>

@@ -5,29 +5,38 @@
     <title>Django_pm</title>
   </head>
   <body>
-    <h1> {{login}} </h1>
-    <form method="POST" action="action_main">
-      {% csrf_token %}
-      {% for site, number_row in all_sites%}
-      <table>
-        <tr>
-          <td name='id{{number_row}}' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
-          <td> {{site.key_login}} </td>
-          <td> {{site.name}} </td>
-          <td> {{site.login}} </td>
-          {%if view == True %}
-          <td> {{site.password}} </td>
-          {%else%}
-          <td> ******** </td>
-          {%endif%}
-          <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
-          <td> <button name='edit{{number_row}}' > Отредактировать запись </button></td>
-          <td> <button name='delete{{number_row}}' > Удалить запись </button></td>
-        </tr>
-       </table>
-      
-      {% endfor %}
-      <button name='add_site'>Добавить сайт</button>
-    </form>
+    {%if auth%}
+      <h1> {{login}} </h1>
+      <form method="POST" action="action_main">
+        {% csrf_token %}
+        {% for site, number_row in all_sites%}
+        <table>
+          <tr>
+            <td name='id{{number_row}}' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
+            <td> {{site.key_login}} </td>
+            <td> {{site.name}} </td>
+            <td> {{site.login}} </td>
+            {%if view == True %}
+            <td> {{site.password}} </td>
+            {%else%}
+            <td> ******** </td>
+            {%endif%}
+            <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
+            <td> <button name='edit{{number_row}}' > Отредактировать запись </button></td>
+            <td> <button name='delete{{number_row}}' > Удалить запись </button></td>
+          </tr>
+        </table>
+        {% endfor %}
+        <button name='add_site'>Добавить сайт</button>
+      </form>
+      <form method="POST" action="exit">
+        {% csrf_token %}
+        <button name='exit'>
+          Выход
+        </button>
+      </form>
+    {%else%}
+      Нет авторизации
+    {%endif%}
   </body>
 </html> 

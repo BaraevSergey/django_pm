@@ -24,7 +24,8 @@ def authority(request): #проверка авторизации
                
             if len(query_list_login) != 0 and query_passwords.exists(): # проверяем есть ли такой логин
                 request.session['user_key'] = hash_pass
-                request.session['Login'] = log_form #для авторизации храним логин для отображения 
+                request.session['Login'] = log_form #для авторизации храним логин для отображения
+                request.session['auth'] = True # указываем что прошла авторизация 
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
@@ -75,6 +76,7 @@ def registration(request): #регистрация
             B.save()
             request.session['user_key'] = hex_dig
             request.session['Login'] = login_form #для авторизации храним логин для отображения
+            request.session['auth'] = True # указываем что прошла авторизация
             return redirect(main_page)
         else:
             return redirect(register_page)
@@ -84,6 +86,62 @@ def registration(request): #регистрация
         #алерт о логине существующем
 
 
+
+def open_add_site(request):
+    form = InputForm()
+    if ('user_key' not in request.session or
+        'Login' not in request.session or
+        'auth' not in request.session):
+            request.session['user_key'] = None 
+            request.session['Login'] = None 
+            request.session['auth'] = False
+    return render (
+        request, 
+        'add_site.html', 
+        {
+            'form': form,
+            "user_key": request.session['user_key'], 
+            "login":request.session['Login'], 
+            "auth" : request.session['auth']
+        }
+    )
+
+def login_page(request):
+    form = LoginForm()
+    return render(request, 'login_page.html', {'form' : form})
+
+def register_page(request):
+    form = RegisterForm()
+    return render(request, 'register_page.html', {'form' : form})
+
+def main_page(request): #отрисовка мейна 
+    
+    if ('user_key' not in request.session or
+        'Login' not in request.session or
+        'auth' not in request.session):
+            request.session['user_key'] = None 
+            request.session['Login'] = None 
+            request.session['auth'] = False   
+    all_sites = SiteInfo.objects.all()
+    return render(
+                request, 
+                'main_page.html', 
+                {
+                    "all_sites": zip(all_sites, range(0, len(all_sites))), 
+                    "user_key": request.session['user_key'], 
+                    "login":request.session['Login'], 
+                    "auth" : request.session['auth']
+                }
+            )
+
+def exit(request):
+    request.session['user_key'] = None #зачищаем при выходе
+    request.session['Login'] = None #зачищаем при выходе
+    request.session['auth'] = False #зачищаем при выходе
+    return redirect(login_page)
+
+
+####этот пока не написан и нафиг он нужен тут
 def action_main(request):
     if request.method == "POST":
         if 'add_site' in request.POST: # если нажата кнопка "Войти"
@@ -98,20 +156,3 @@ def action_main(request):
             return redirect(main_page)
     else:
         return redirect(main_page)
-
-def open_add_site(request):
-    form = InputForm()
-    return render (request, 'add_site.html', {'form': form})
-
-def login_page(request):
-    form = LoginForm()
-    return render(request, 'login_page.html', {'form' : form})
-
-def register_page(request):
-    form = RegisterForm()
-    return render(request, 'register_page.html', {'form' : form})
-
-def main_page(request): #отрисовка мейна 
-    all_sites = SiteInfo.objects.all()
-    view = True
-    return render (request, 'main_page.html', {"all_sites": zip(all_sites, range(0, len(all_sites))), "user_key": request.session['user_key'], "login":request.session['Login']})
