@@ -21,7 +21,7 @@ def authority(request): #проверка авторизации
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = hash_pass)
-            request.session['user_key'] = '1234'            
+            request.session['user_key'] = hash_pass         
             if len(query_list_login) != 0 and query_passwords.exists(): # проверяем есть ли такой логин
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
@@ -71,7 +71,7 @@ def registration(request): #регистрация
             B = LogInfo(login = login_form,
                 password = hex_dig)
             B.save()
-            request.session['user_key'] = '1234'
+            request.session['user_key'] = hex_dig
             return redirect(main_page)
         else:
             return redirect(register_page)
