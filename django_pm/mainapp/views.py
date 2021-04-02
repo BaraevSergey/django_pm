@@ -16,12 +16,13 @@ def authority(request): #проверка авторизации
             #получаем данные из формы
             log_form = request.POST.get("login", "")
             pass_form = request.POST.get("password", "")
-
+            #Хэшируем и солим пароль
+            hash_pass = hashlib.sha512(hashlib.sha512(pass_form.encode('utf-8')))
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
-            query_passwords = LogInfo.objects.all().filter(password = pass_form)
+            query_passwords = LogInfo.objects.all().filter(password = hash_pass)
             request.session['user_key'] = '1234'            
-            if len(query_list_login) != 0 or query_passwords.exists(): # проверяем есть ли такой логин
+            if len(query_list_login) != 0 and query_passwords.exists(): # проверяем есть ли такой логин
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
