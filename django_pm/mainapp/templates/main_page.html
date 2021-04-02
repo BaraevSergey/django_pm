@@ -5,7 +5,7 @@
     <title>Django_pm</title>
   </head>
   <body>
-    <h1> Тест текст </h1>
+    <h1> {{login}} </h1>
     <form method="POST" action="action_main">
       {% csrf_token %}
       {% for site, number_row in all_sites%}

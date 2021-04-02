@@ -17,12 +17,14 @@ def authority(request): #проверка авторизации
             log_form = request.POST.get("login", "")
             pass_form = request.POST.get("password", "")
             #Хэшируем и солим пароль
-            hash_pass = hashlib.sha512(hashlib.sha512(pass_form.encode('utf-8')))
+            hash_pass = hashlib.sha512((hashlib.sha512(pass_form.encode('utf-8'))).hexdigest().encode('utf-8')).hexdigest()
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = hash_pass)
-            request.session['user_key'] = hash_pass         
+               
             if len(query_list_login) != 0 and query_passwords.exists(): # проверяем есть ли такой логин
+                request.session['user_key'] = hash_pass
+                request.session['Login'] = log_form #для авторизации храним логин для отображения 
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
@@ -63,7 +65,7 @@ def registration(request): #регистрация
     hash_object = hashlib.sha512(confirm_pass_form.encode('utf-8'))
     hex_dig = hash_object.hexdigest()
     hex_dig = hashlib.sha512((hex_dig+pass_form).encode('utf-8')) #соль в виде пароля
-
+    hex_dig = hex_dig.hexdigest()
     
     query_list_login = LogInfo.objects.all().filter(login = login_form) #проверяем есть ли такой логин в регистрации
     if len(query_list_login) == 0:
@@ -72,6 +74,7 @@ def registration(request): #регистрация
                 password = hex_dig)
             B.save()
             request.session['user_key'] = hex_dig
+            request.session['Login'] = login_form #для авторизации храним логин для отображения
             return redirect(main_page)
         else:
             return redirect(register_page)
@@ -111,4 +114,4 @@ def register_page(request):
 def main_page(request): #отрисовка мейна 
     all_sites = SiteInfo.objects.all()
     view = True
-    return render (request, 'main_page.html', {"all_sites": zip(all_sites, range(0, len(all_sites))), "user_key": request.session['user_key'], "view":view})
+    return render (request, 'main_page.html', {"all_sites": zip(all_sites, range(0, len(all_sites))), "user_key": request.session['user_key'], "login":request.session['Login']})
