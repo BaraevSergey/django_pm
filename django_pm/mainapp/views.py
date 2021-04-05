@@ -7,6 +7,7 @@ from .forms import InputForm
 from .forms import LoginForm
 from .forms import RegisterForm
 import hashlib
+import logging #для логирования
 # Create your views here.
 
 def authority(request): #проверка авторизации
@@ -16,8 +17,12 @@ def authority(request): #проверка авторизации
             #получаем данные из формы
             log_form = request.POST.get("login", "")
             pass_form = request.POST.get("password", "")
-            #Хэшируем и солим пароль
-            hash_pass = hashlib.sha512((hashlib.sha512(pass_form.encode('utf-8'))).hexdigest().encode('utf-8')).hexdigest()
+            #Хэшируем и солим пароль для сравнения
+            hash_object = hashlib.sha512(pass_form.encode('utf-8'))
+            hex_dig = hash_object.hexdigest()
+            hex_dig = hashlib.sha512((hex_dig+log_form).encode('utf-8')) #соль в виде пароля
+            hex_dig = hex_dig.hexdigest()
+            
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = hash_pass)
@@ -58,18 +63,19 @@ def add_info(request):#добавление сайта со страницы д�
 
 
 def registration(request): #регистрация 
+    import logging
     login_form = request.POST.get("login", "")
     pass_form = request.POST.get("password", "")
     confirm_pass_form = request.POST.get("confirm_pass", "")
-    
+    logging.debug(request.POST.get)
     #хэширование пароля
     hash_object = hashlib.sha512(confirm_pass_form.encode('utf-8'))
     hex_dig = hash_object.hexdigest()
-    hex_dig = hashlib.sha512((hex_dig+pass_form).encode('utf-8')) #соль в виде пароля
+    hex_dig = hashlib.sha512((hex_dig+login_form).encode('utf-8')) #соль в виде пароля
     hex_dig = hex_dig.hexdigest()
     
     query_list_login = LogInfo.objects.all().filter(login = login_form) #проверяем есть ли такой логин в регистрации
-    if len(query_list_login) == 0:
+    if len(query_list_login) == 0:  
         if confirm_pass_form == pass_form:
             B = LogInfo(login = login_form,
                 password = hex_dig)
@@ -122,7 +128,7 @@ def main_page(request): #отрисовка мейна
             request.session['user_key'] = None 
             request.session['Login'] = None 
             request.session['auth'] = False   
-    all_sites = SiteInfo.objects.all()
+    all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
     return render(
                 request, 
                 'main_page.html', 
