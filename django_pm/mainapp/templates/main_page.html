@@ -16,10 +16,11 @@
             <td> {{site.key_login}} </td>
             <td> {{site.name}} </td>
             <td> {{site.login}} </td>
-            {%if view == True %}
+             {%if view == False %} <!-- поменять потом на true -->
             <td> {{site.password}} </td>
             {%else%}
-            <td> ******** </td>
+            <td> {{site.password}} 
+              ******** </td>
             {%endif%}
             <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
             <td> <button name='edit{{number_row}}' > Отредактировать запись </button></td>

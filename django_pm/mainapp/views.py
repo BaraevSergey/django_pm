@@ -9,6 +9,10 @@ from .forms import RegisterForm
 import hashlib #для хэширования
 import logging #для логирования
 from cryptography.fernet import Fernet #для шифрования
+import base64
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 # Create your views here.
 
 def authority(request): #проверка авторизации
@@ -19,10 +23,10 @@ def authority(request): #проверка авторизации
             log_form = request.POST.get("login", "")
             pass_form = request.POST.get("password", "")
             #Хэшируем и солим пароль для сравнения
-            hash_object = hashlib.sha512(pass_form.encode('utf-8'))
-            hex_dig = hash_object.hexdigest()
-            hex_dig = hashlib.sha512((hex_dig+log_form).encode('utf-8')) #соль в виде пароля
-            hex_dig = hex_dig.hexdigest()
+            hash_pass = hashlib.sha512(pass_form.encode('utf-8'))
+            hash_pass = hash_pass.hexdigest()
+            hash_pass = hashlib.sha512((hash_pass+log_form).encode('utf-8')) #соль в виде пароля
+            hash_pass = hash_pass.hexdigest()
             
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
@@ -41,8 +45,6 @@ def authority(request): #проверка авторизации
         elif 'register_button' in request.POST: #если кнопка регистрации то редиректнем на страницу регистрации
             return redirect(register_page)
 
-
-
 def add_info(request):#добавление сайта со страницы добавления
     if request.method == "POST":
         form = InputForm()
@@ -50,6 +52,23 @@ def add_info(request):#добавление сайта со страницы д�
             name_form = request.POST.get("name", "")
             login_form = request.POST.get("login", "") 
             pass_form = request.POST.get("password", "")
+            
+            #создание ключа по паре логин пароль для шифрования
+            key_lp = (login_form+pass_form).encode()
+            salt = b'salt'
+            kdf = PBKDF2HMAC(
+                algorithm=hashes.SHA256(),
+                length=32,
+                salt=salt,
+                iterations=100000,
+                backend=default_backend()
+            )
+            key = base64.urlsafe_b64encode(kdf.derive(key_lp))
+            
+            f = Fernet(key)
+
+            pass_form = f.encrypt(pass_form.encode())
+
 
             B = SiteInfo(
                 key_login = request.session['user_key'],
@@ -62,16 +81,11 @@ def add_info(request):#добавление сайта со страницы д�
     else: 
         form = InputForm()
         return redirect(open_add_site)
-    
-
-
 
 def registration(request): #регистрация 
-    import logging
     login_form = request.POST.get("login", "")
     pass_form = request.POST.get("password", "")
     confirm_pass_form = request.POST.get("confirm_pass", "")
-    logging.debug(request.POST.get)
     #хэширование пароля
     hash_object = hashlib.sha512(confirm_pass_form.encode('utf-8'))
     hex_dig = hash_object.hexdigest()
@@ -96,8 +110,6 @@ def registration(request): #регистрация
     else:
         return redirect(register_page)
         #алерт о логине существующем
-
-
 
 def open_add_site(request):
     form = InputForm()
