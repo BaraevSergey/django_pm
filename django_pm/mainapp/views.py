@@ -31,13 +31,27 @@ def authority(request): #проверка авторизации
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = hash_pass)
-               
+
+            #создание ключа по паре логин пароль для шифрования
+            key_lp = (log_form+pass_form).encode()
+            logging.debug(key_lp)
+            salt = b'salt'
+            kdf = PBKDF2HMAC(
+                algorithm=hashes.SHA256(),
+                length=32,
+                salt=salt,
+                iterations=100000,
+                backend=default_backend()
+            )
+            key = base64.urlsafe_b64encode(kdf.derive(key_lp))
+
+
             if len(query_list_login) != 0 and query_passwords.exists(): # проверяем есть ли такой логин
                 request.session['user_key'] = hash_pass
                 request.session['Login'] = log_form #для авторизации храним логин для отображения
                 request.session['auth'] = True # указываем что прошла авторизация 
                 request.session['pass_key'] = hashlib.sha512((log_form+pass_form).encode('utf-8')).hexdigest()
-            
+                request.session['key_for_cipher'] = key.decode() #ключ для шифрования паролей
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
@@ -53,22 +67,9 @@ def add_info(request):#добавление сайта со страницы д�
             login_form = request.POST.get("login", "") 
             pass_form = request.POST.get("password", "")
             
-            #создание ключа по паре логин пароль для шифрования
-            key_lp = (login_form+pass_form).encode()
-            salt = b'salt'
-            kdf = PBKDF2HMAC(
-                algorithm=hashes.SHA256(),
-                length=32,
-                salt=salt,
-                iterations=100000,
-                backend=default_backend()
-            )
-            key = base64.urlsafe_b64encode(kdf.derive(key_lp))
-            
-            f = Fernet(key)
 
+            f = Fernet(request.session['key_for_cipher'].encode())
             pass_form = f.encrypt(pass_form.encode())
-
 
             B = SiteInfo(
                 key_login = request.session['user_key'],
@@ -93,6 +94,21 @@ def registration(request): #регистрация
     hex_dig = hex_dig.hexdigest()
     
     query_list_login = LogInfo.objects.all().filter(login = login_form) #проверяем есть ли такой логин в регистрации
+
+
+
+    #создание ключа по паре логин пароль для шифрования
+    key_lp = (login_form+pass_form).encode()
+    salt = b'salt'
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(key_lp))
+
     if len(query_list_login) == 0:  
         if confirm_pass_form == pass_form:
             B = LogInfo(login = login_form,
@@ -101,8 +117,8 @@ def registration(request): #регистрация
             request.session['user_key'] = hex_dig
             request.session['Login'] = login_form #для авторизации храним логин для отображения
             request.session['auth'] = True # указываем что прошла авторизация
-            request.session['pass_key'] = hashlib.sha512((confirm_pass_form+login_form).encode('utf-8')).hexdigest()
-            
+            request.session['pass_key'] = hashlib.sha512((confirm_pass_form+login_form).encode('utf-8')).hexdigest() #для принадлежности пользователя
+            request.session['key_for_cipher'] = key.decode() #ключ для шифрования паролей
             return redirect(main_page)
         else:
             return redirect(register_page)
@@ -116,11 +132,13 @@ def open_add_site(request):
     if ('user_key' not in request.session or
         'Login' not in request.session or
         'auth' not in request.session or
-        'pass_key' not in request.session):
+        'pass_key' not in request.session or
+        'key_for_cipher' not in request.session):
             request.session['user_key'] = None 
             request.session['Login'] = None 
             request.session['auth'] = False
             request.session['pass_key'] = None
+            request.session['key_for_cipher'] = None
     return render (
         request, 
         'add_site.html', 
@@ -146,11 +164,14 @@ def main_page(request): #отрисовка мейна
     if ('user_key' not in request.session or
         'Login' not in request.session or
         'auth' not in request.session or
-        'pass_key' not in request.session):
+        'pass_key' not in request.session or 
+        'key_for_cipher' not in request.session):
             request.session['user_key'] = None 
             request.session['Login'] = None 
             request.session['auth'] = False
             request.session['pass_key'] = None
+            request.session['key_for_cipher'] = None
+    
     all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
     return render(
                 request, 
@@ -169,6 +190,7 @@ def exit(request):
     request.session['Login'] = None #зачищаем при выходе
     request.session['auth'] = False #зачищаем при выходе
     request.session['pass_key'] = None #зачищаем при выходе
+    request.session['key_for_cipher'] = None
     return redirect(login_page)
 
 
