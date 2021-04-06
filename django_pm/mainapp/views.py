@@ -69,7 +69,7 @@ def add_info(request):#добавление сайта со страницы д�
             
 
             f = Fernet(request.session['key_for_cipher'].encode())
-            pass_form = f.encrypt(pass_form.encode())
+            pass_form = f.encrypt(pass_form.encode()).decode()
 
             B = SiteInfo(
                 key_login = request.session['user_key'],
@@ -173,6 +173,13 @@ def main_page(request): #отрисовка мейна
             request.session['key_for_cipher'] = None
     
     all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
+
+    f = Fernet(request.session['key_for_cipher'].encode())
+    for a in all_sites:
+        temp1 = (a.password).encode()
+        a.password = str(f.decrypt(temp1))
+        a.password = a.password[2:len(a.password)-1]
+
     return render(
                 request, 
                 'main_page.html', 
