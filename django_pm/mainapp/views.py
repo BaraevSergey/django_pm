@@ -6,8 +6,9 @@ from mainapp.models import LogInfo
 from .forms import InputForm
 from .forms import LoginForm
 from .forms import RegisterForm
-import hashlib
+import hashlib #для хэширования
 import logging #для логирования
+from cryptography.fernet import Fernet #для шифрования
 # Create your views here.
 
 def authority(request): #проверка авторизации
@@ -31,6 +32,8 @@ def authority(request): #проверка авторизации
                 request.session['user_key'] = hash_pass
                 request.session['Login'] = log_form #для авторизации храним логин для отображения
                 request.session['auth'] = True # указываем что прошла авторизация 
+                request.session['pass_key'] = hashlib.sha512((log_form+pass_form).encode('utf-8')).hexdigest()
+            
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
@@ -47,6 +50,7 @@ def add_info(request):#добавление сайта со страницы д�
             name_form = request.POST.get("name", "")
             login_form = request.POST.get("login", "") 
             pass_form = request.POST.get("password", "")
+
             B = SiteInfo(
                 key_login = request.session['user_key'],
                 name = name_form,
@@ -83,6 +87,8 @@ def registration(request): #регистрация
             request.session['user_key'] = hex_dig
             request.session['Login'] = login_form #для авторизации храним логин для отображения
             request.session['auth'] = True # указываем что прошла авторизация
+            request.session['pass_key'] = hashlib.sha512((confirm_pass_form+login_form).encode('utf-8')).hexdigest()
+            
             return redirect(main_page)
         else:
             return redirect(register_page)
@@ -97,10 +103,12 @@ def open_add_site(request):
     form = InputForm()
     if ('user_key' not in request.session or
         'Login' not in request.session or
-        'auth' not in request.session):
+        'auth' not in request.session or
+        'pass_key' not in request.session):
             request.session['user_key'] = None 
             request.session['Login'] = None 
             request.session['auth'] = False
+            request.session['pass_key'] = None
     return render (
         request, 
         'add_site.html', 
@@ -108,7 +116,8 @@ def open_add_site(request):
             'form': form,
             "user_key": request.session['user_key'], 
             "login":request.session['Login'], 
-            "auth" : request.session['auth']
+            "auth" : request.session['auth'],
+            "pass_key" : request.session['pass_key']
         }
     )
 
@@ -124,10 +133,12 @@ def main_page(request): #отрисовка мейна
     
     if ('user_key' not in request.session or
         'Login' not in request.session or
-        'auth' not in request.session):
+        'auth' not in request.session or
+        'pass_key' not in request.session):
             request.session['user_key'] = None 
             request.session['Login'] = None 
-            request.session['auth'] = False   
+            request.session['auth'] = False
+            request.session['pass_key'] = None
     all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
     return render(
                 request, 
@@ -136,7 +147,8 @@ def main_page(request): #отрисовка мейна
                     "all_sites": zip(all_sites, range(0, len(all_sites))), 
                     "user_key": request.session['user_key'], 
                     "login":request.session['Login'], 
-                    "auth" : request.session['auth']
+                    "auth" : request.session['auth'],
+                    "pass_key" : request.session['pass_key']
                 }
             )
 
@@ -144,6 +156,7 @@ def exit(request):
     request.session['user_key'] = None #зачищаем при выходе
     request.session['Login'] = None #зачищаем при выходе
     request.session['auth'] = False #зачищаем при выходе
+    request.session['pass_key'] = None #зачищаем при выходе
     return redirect(login_page)
 
 
