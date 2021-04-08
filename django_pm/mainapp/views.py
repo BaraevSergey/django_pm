@@ -15,6 +15,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 # Create your views here.
 
+
 def authority(request): #проверка авторизации
     if request.POST: #если пост запрос
         if 'login_button' in request.POST: # если нажата кнопка "Войти"
@@ -22,40 +23,21 @@ def authority(request): #проверка авторизации
             #получаем данные из формы
             log_form = request.POST.get("login", "")
             pass_form = request.POST.get("password", "")
-            #Хэшируем и солим пароль для сравнения
-            hash_pass = hashlib.sha512(pass_form.encode('utf-8'))
-            hash_pass = hash_pass.hexdigest()
-            hash_pass = hashlib.sha512((hash_pass+log_form).encode('utf-8')) #соль в виде пароля
-            hash_pass = hash_pass.hexdigest()
+            hash_pass = hash_plus_salt(pass_form, log_form) #вызов функции хэширования, которая возвращает строку
             
             #получаем из бд данные, введённые в форму
             query_list_login = LogInfo.objects.all().filter(login = log_form)
             query_passwords = LogInfo.objects.all().filter(password = hash_pass)
 
             #создание ключа по паре логин пароль для шифрования
-            key_lp = (log_form+pass_form).encode()
-            logging.debug(key_lp)
-            salt = b'salt'
-            kdf = PBKDF2HMAC(
-                algorithm=hashes.SHA256(),
-                length=32,
-                salt=salt,
-                iterations=100000,
-                backend=default_backend()
-            )
-            key = base64.urlsafe_b64encode(kdf.derive(key_lp))
-
+            key = get_cipher_key(log_form, pass_form).decode()
+            pass_key = hashlib.sha512((log_form+pass_form).encode('utf-8')).hexdigest()
 
             if len(query_list_login) != 0 and query_passwords.exists(): # проверяем есть ли такой логин
-                request.session['user_key'] = hash_pass
-                request.session['Login'] = log_form #для авторизации храним логин для отображения
-                request.session['auth'] = True # указываем что прошла авторизация 
-                request.session['pass_key'] = hashlib.sha512((log_form+pass_form).encode('utf-8')).hexdigest()
-                request.session['key_for_cipher'] = key.decode() #ключ для шифрования паролей
+                success_authority(request, hash_pass, log_form, pass_key, key)
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
-                    #тут ещё надо сообщение о том, что авторизация не прошла
         elif 'register_button' in request.POST: #если кнопка регистрации то редиректнем на страницу регистрации
             return redirect(register_page)
 
@@ -67,15 +49,13 @@ def add_info(request):#добавление сайта со страницы д�
             login_form = request.POST.get("login", "") 
             pass_form = request.POST.get("password", "")
             
-
-            f = Fernet(request.session['key_for_cipher'].encode())
-            pass_form = f.encrypt(pass_form.encode()).decode()
+            ciph_pass = cipher_password(request, pass_form)
 
             B = SiteInfo(
                 key_login = request.session['user_key'],
                 name = name_form,
                 login=login_form, 
-                password = pass_form
+                password = ciph_pass
                 )
             B.save()
         return redirect(main_page)
@@ -87,38 +67,21 @@ def registration(request): #регистрация
     login_form = request.POST.get("login", "")
     pass_form = request.POST.get("password", "")
     confirm_pass_form = request.POST.get("confirm_pass", "")
-    #хэширование пароля
-    hash_object = hashlib.sha512(confirm_pass_form.encode('utf-8'))
-    hex_dig = hash_object.hexdigest()
-    hex_dig = hashlib.sha512((hex_dig+login_form).encode('utf-8')) #соль в виде пароля
-    hex_dig = hex_dig.hexdigest()
+
+    hash_pass = hash_plus_salt(pass_form, login_form) #вызов функции хэширования, которая возвращает строку
     
     query_list_login = LogInfo.objects.all().filter(login = login_form) #проверяем есть ли такой логин в регистрации
 
-
-
     #создание ключа по паре логин пароль для шифрования
-    key_lp = (login_form+pass_form).encode()
-    salt = b'salt'
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-        backend=default_backend()
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(key_lp))
+    key = get_cipher_key(login_form, pass_form).decode()
+    pass_key = hashlib.sha512((confirm_pass_form+login_form).encode('utf-8')).hexdigest() #для принадлежности пользователя
 
     if len(query_list_login) == 0:  
         if confirm_pass_form == pass_form:
             B = LogInfo(login = login_form,
-                password = hex_dig)
+                password = hash_pass)
             B.save()
-            request.session['user_key'] = hex_dig
-            request.session['Login'] = login_form #для авторизации храним логин для отображения
-            request.session['auth'] = True # указываем что прошла авторизация
-            request.session['pass_key'] = hashlib.sha512((confirm_pass_form+login_form).encode('utf-8')).hexdigest() #для принадлежности пользователя
-            request.session['key_for_cipher'] = key.decode() #ключ для шифрования паролей
+            success_authority(request, hash_pass, login_form, pass_key , key)
             return redirect(main_page)
         else:
             return redirect(register_page)
@@ -129,16 +92,8 @@ def registration(request): #регистрация
 
 def open_add_site(request):
     form = InputForm()
-    if ('user_key' not in request.session or
-        'Login' not in request.session or
-        'auth' not in request.session or
-        'pass_key' not in request.session or
-        'key_for_cipher' not in request.session):
-            request.session['user_key'] = None 
-            request.session['Login'] = None 
-            request.session['auth'] = False
-            request.session['pass_key'] = None
-            request.session['key_for_cipher'] = None
+    if (check_value_session(request)):
+            clear_session(request)
     return render (
         request, 
         'add_site.html', 
@@ -161,24 +116,15 @@ def register_page(request):
 
 def main_page(request): #отрисовка мейна 
     
-    if ('user_key' not in request.session or
-        'Login' not in request.session or
-        'auth' not in request.session or
-        'pass_key' not in request.session or 
-        'key_for_cipher' not in request.session):
-            request.session['user_key'] = None 
-            request.session['Login'] = None 
-            request.session['auth'] = False
-            request.session['pass_key'] = None
-            request.session['key_for_cipher'] = None
-    
-    all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
+    if (check_value_session(request)):
+        clear_session(request)
 
-    f = Fernet(request.session['key_for_cipher'].encode())
-    for a in all_sites:
-        temp1 = (a.password).encode()
-        a.password = str(f.decrypt(temp1))
-        a.password = a.password[2:len(a.password)-1]
+    all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
+    if request.session['key_for_cipher'] !=None: #тут почему то была трабла с None у этого ключа, поставил костыль
+        Fer_Inst = Fernet(request.session['key_for_cipher'].encode())
+        for a in all_sites:
+            a.password = decipher_password(Fer_Inst, a)
+       
 
     return render(
                 request, 
@@ -193,13 +139,8 @@ def main_page(request): #отрисовка мейна
             )
 
 def exit(request):
-    request.session['user_key'] = None #зачищаем при выходе
-    request.session['Login'] = None #зачищаем при выходе
-    request.session['auth'] = False #зачищаем при выходе
-    request.session['pass_key'] = None #зачищаем при выходе
-    request.session['key_for_cipher'] = None
+    clear_session(request)
     return redirect(login_page)
-
 
 ####этот пока не написан и нафиг он нужен тут
 def action_main(request):
@@ -216,3 +157,61 @@ def action_main(request):
             return redirect(main_page)
     else:
         return redirect(main_page)
+
+
+def hash_plus_salt(message, salt):#хэширование пароля + соль
+    hash = hashlib.sha512(message.encode('utf-8')).hexdigest()
+    hash_plus_salt = hashlib.sha512((hash+salt).encode('utf-8')).hexdigest() #соль в виде пароля
+    return hash_plus_salt
+
+def get_cipher_key(message1, message2):#создание ключа по паре логин пароль для шифрования
+    my_key = (message1+message2).encode()
+    salt = b'salt' # соль
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(my_key))
+    return key
+
+def clear_session(request): #очистка сессии
+    request.session['user_key'] = None 
+    request.session['Login'] = None 
+    request.session['auth'] = False 
+    request.session['pass_key'] = None 
+    request.session['key_for_cipher'] = None 
+    return None
+
+def check_value_session(request): #проверка все ли значения сессии существуют(ошибка падает)
+    if ('user_key' not in request.session or
+        'Login' not in request.session or
+        'auth' not in request.session or
+        'pass_key' not in request.session or 
+        'key_for_cipher' not in request.session):
+        return True
+    else:
+        return False 
+
+def cipher_password(request, password): # шифрование добавляемого пароля
+    f = Fernet(request.session['key_for_cipher'].encode())
+    cipher_password = f.encrypt(password.encode()).decode()
+    return cipher_password
+
+def decipher_password(Fer_Inst, site_row): #дешифровка одного пароля
+    pass_bytes = (site_row.password).encode()
+    dec_password = str(Fer_Inst.decrypt(pass_bytes))
+    logging.debug(dec_password)
+    dec_password = dec_password[2:len(dec_password)-1]
+    logging.debug(dec_password)
+    return dec_password
+
+def success_authority(request, user_key, login, pass_key, key_for_cipher): #установка ключей в сессию
+    request.session['user_key'] = user_key
+    request.session['Login'] = login #для авторизации храним логин для отображения
+    request.session['auth'] = True # указываем что прошла авторизация 
+    request.session['pass_key'] = pass_key
+    request.session['key_for_cipher'] = key_for_cipher#ключ для шифрования паролей
+    return None
