@@ -130,7 +130,7 @@ def main_page(request): #отрисовка мейна
                 request, 
                 'main_page.html', 
                 {
-                    "all_sites": zip(all_sites, range(0, len(all_sites))), 
+                    "all_sites": all_sites, 
                     "user_key": request.session['user_key'], 
                     "login":request.session['Login'], 
                     "auth" : request.session['auth'],
@@ -142,10 +142,11 @@ def exit(request):
     clear_session(request)
     return redirect(login_page)
 
-####этот пока не написан и нафиг он нужен тут
-def action_row(request):
+
+def action_row(request, id):
     if request.method == "POST":
         if 'delete' in request.POST:
+            SiteInfo.objects.filter(pk=id).delete()
             return redirect(main_page) #тут удалять пароль, обновлять страничку
         elif 'edit' in request.POST:
             return redirect(main_page) #тут как то редачить 
