@@ -7,29 +7,36 @@
   <body>
     {%if auth%}
       <h1> {{login}} </h1>
-      <form method="POST" action="action_main">
-        {% csrf_token %}
+      
+      
+      <table>
         {% for site, number_row in all_sites%}
-        <table>
-          <tr>
-            <td name='id{{number_row}}' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
+        <tr>
+          <form method="POST" action="action_row">
+            {% csrf_token %}
+            <td name='id' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
             <td> {{site.key_login}} </td>
             <td> {{site.name}} </td>
             <td> {{site.login}} </td>
-             {%if view == False %} <!-- поменять потом на true -->
+              {%if view == False %} <!-- поменять потом на true -->
             <td> {{site.password}} </td>
             {%else%}
             <td> {{site.password}} 
               ******** </td>
             {%endif%}
             <!-- пока хз как реализовать это <td> <button id='view'> Скрыть/Отобразить </button></td> -->
-            <td> <button name='edit{{number_row}}' > Отредактировать запись </button></td>
-            <td> <button name='delete{{number_row}}' > Удалить запись </button></td>
-          </tr>
-        </table>
+            <td> <button name='edit' > Отредактировать запись </button></td>
+            <td> <button name='delete' > Удалить запись </button></td>
+          </form>
+        </tr>
         {% endfor %}
+      </table>
+      
+      <form method="POST" action="add_site_redirect">
+        {% csrf_token %}
         <button name='add_site'>Добавить сайт</button>
       </form>
+
       <form method="POST" action="exit">
         {% csrf_token %}
         <button name='exit'>

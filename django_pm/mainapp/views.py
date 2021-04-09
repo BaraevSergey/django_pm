@@ -143,21 +143,21 @@ def exit(request):
     return redirect(login_page)
 
 ####этот пока не написан и нафиг он нужен тут
-def action_main(request):
+def action_row(request):
     if request.method == "POST":
-        if 'add_site' in request.POST: # если нажата кнопка "Войти"
-            return redirect(open_add_site)
-        elif 'delete' in request.POST:
-            id = request.POST.get("id")
-            SiteInfo.objects.get.delete(pk=id)
-            return redirect(main_page)
+        if 'delete' in request.POST:
+            return redirect(main_page) #тут удалять пароль, обновлять страничку
         elif 'edit' in request.POST:
-            return redirect(main_page)
-        else:
+            return redirect(main_page) #тут как то редачить 
+        else: # на всякий случай ветка
             return redirect(main_page)
     else:
         return redirect(main_page)
 
+def add_site_redirect(request):
+    if request.method == "POST":
+        return redirect(open_add_site)
+    
 
 def hash_plus_salt(message, salt):#хэширование пароля + соль
     hash = hashlib.sha512(message.encode('utf-8')).hexdigest()
@@ -203,9 +203,7 @@ def cipher_password(request, password): # шифрование добавляе�
 def decipher_password(Fer_Inst, site_row): #дешифровка одного пароля
     pass_bytes = (site_row.password).encode()
     dec_password = str(Fer_Inst.decrypt(pass_bytes))
-    logging.debug(dec_password)
     dec_password = dec_password[2:len(dec_password)-1]
-    logging.debug(dec_password)
     return dec_password
 
 def success_authority(request, user_key, login, pass_key, key_for_cipher): #установка ключей в сессию

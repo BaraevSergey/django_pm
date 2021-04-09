@@ -19,7 +19,8 @@ from mainapp import views
 urlpatterns = [
     path('admin', admin.site.urls),
     path('main', views.main_page),
-    path('action_main', views.action_main),
+    path('action_row', views.action_row),
+    path('add_site_redirect', views.add_site_redirect),
     path('add_info', views.add_info),
     path('login', views.login_page),
     path('add_site', views.open_add_site),
