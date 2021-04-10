@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin', admin.site.urls),
     path('main', views.main_page),
     path('action_row/<int:id>/', views.action_row),
+    path('edit/<int:id>/', views.edit),
     path('add_site_redirect', views.add_site_redirect),
     path('add_info', views.add_info),
     path('login', views.login_page),

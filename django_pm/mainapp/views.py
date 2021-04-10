@@ -6,6 +6,7 @@ from mainapp.models import LogInfo
 from .forms import InputForm
 from .forms import LoginForm
 from .forms import RegisterForm
+from .forms import EditForm
 import hashlib #для хэширования
 import logging #для логирования
 from cryptography.fernet import Fernet #для шифрования
@@ -13,6 +14,7 @@ import base64
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
 # Create your views here.
 
 
@@ -120,10 +122,7 @@ def main_page(request): #отрисовка мейна
         clear_session(request)
 
     all_sites = SiteInfo.objects.all().filter(key_login = request.session['user_key'])
-    if request.session['key_for_cipher'] !=None: #тут почему то была трабла с None у этого ключа, поставил костыль
-        Fer_Inst = Fernet(request.session['key_for_cipher'].encode())
-        for a in all_sites:
-            a.password = decipher_password(Fer_Inst, a)
+    all_sites = decipher_query(request, all_sites)
        
 
     return render(
@@ -149,21 +148,53 @@ def action_row(request, id):
             SiteInfo.objects.filter(pk=id).delete()
             return redirect(main_page) #тут удалять пароль, обновлять страничку
         elif 'edit' in request.POST:
-            return redirect(main_page) #тут как то редачить 
+            site_for_edit = SiteInfo.objects.filter(pk=id) #тут цикл потому что я не понял как делать для одного
+            site_for_edit = decipher_query(request, site_for_edit)
+
+            for site in site_for_edit:
+                data = {
+                    'site' : site.name, 
+                    'login' : site.login,
+                    'password' : site.password
+                }
+            form = EditForm(initial = data)
+            return render(request, 'edit_site.html', 
+                {
+                    
+                    "id" : id,
+                    'form' : form
+                }    
+            ) 
         else: # на всякий случай ветка
             return redirect(main_page)
     else:
         return redirect(main_page)
 
+ 
+
 def add_site_redirect(request):
     if request.method == "POST":
         return redirect(open_add_site)
-    
+
+def edit(request, id):
+    if request.method == "POST":
+        new_site = request.POST.get("site")
+        new_login = request.POST.get("login")
+        new_password= cipher_password(request, request.POST.get("password"))
+        SiteInfo.objects.filter(pk=id).update(name = new_site, login = new_login, password = new_password)
+        return redirect(main_page)
 
 def hash_plus_salt(message, salt):#хэширование пароля + соль
     hash = hashlib.sha512(message.encode('utf-8')).hexdigest()
     hash_plus_salt = hashlib.sha512((hash+salt).encode('utf-8')).hexdigest() #соль в виде пароля
     return hash_plus_salt
+
+def decipher_query(request, query):
+    if request.session['key_for_cipher'] !=None: #тут почему то была трабла с None у этого ключа, поставил костыль
+                Fer_Inst = Fernet(request.session['key_for_cipher'].encode())
+                for a in query:
+                    a.password = decipher_password(Fer_Inst, a)
+    return query
 
 def get_cipher_key(message1, message2):#создание ключа по паре логин пароль для шифрования
     my_key = (message1+message2).encode()
