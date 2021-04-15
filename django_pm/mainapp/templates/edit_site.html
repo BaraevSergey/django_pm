@@ -5,10 +5,14 @@
         <title>Django_pm</title>
     </head>
     <body>
+        {%if auth%}
         <form method="POST" action='../../edit/{{id}}/'>
             {% csrf_token %}
             {{form}}
             <input type='submit' name="edit" value="Редактировать"/> 
         </form>
+        {%else%}
+            Нет авторизации
+        {%endif%}
     </body>
 </html>

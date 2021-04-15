@@ -162,7 +162,9 @@ def action_row(request, id):
                 {
                     
                     "id" : id,
+                    "auth" : request.session['auth'],
                     'form' : form
+                    
                 }    
             ) 
         else: # на всякий случай ветка
