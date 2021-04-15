@@ -1,16 +1,49 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>Django_pm</title>
+        <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
     </head>
     <body>
         {%if auth%}
-        <form method="POST" action='../../edit/{{id}}/'>
-            {% csrf_token %}
-            {{form}}
-            <input type='submit' name="edit" value="Редактировать"/> 
-        </form>
+        <header class='header'>
+            <!-- тут надо замочек + кнопку регистрации -->
+        </header>
+        <main class='main'>
+            <form method="POST" action='../../edit/{{id}}/'>
+                {% csrf_token %}
+                <div class='edit'>
+                    
+                    <span class='label'> Карточка редактирования сайта {{ form.site.value }}</span>
+                    <div class='site_name'>
+                        <span class='label'>{{ form.site.label }}</span>
+                        {{ form.site }}
+                    </div>
+
+                    <div class='site_name'>
+                        <span class='label'>{{ form.login.label }}</span>
+                        {{ form.login }}
+                    </div>
+
+                    <div class='site_name'>
+                        <span class='label'>{{ form.password.label }}</span>
+                        {{ form.password }}
+                    </div>
+
+
+                    <input type='submit' class='edit_button' name="edit" value="Редактировать"/> 
+                </div>
+            </form>
+        </main>
+        <footer class='footer'>
+            <!-- <span class='develop_span'> This site is under construction</span>
+            <span class='my_info'> 
+              Created by Baraev Sergey
+              baraev.sergey@mail.ru 
+            </span> -->
+        </footer>
         {%else%}
             Нет авторизации
         {%endif%}
