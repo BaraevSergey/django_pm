@@ -1,15 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Django_pm</title>
+    <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
   </head>
   <body>
-    <form method="POST" action="add_register">
-      {% csrf_token %}
-      {{ form }}
-      <button> Зарегистрироваться</button>
-    </form>
+    <header class='header'>
+      <!-- тут надо замочек + кнопку логина -->
+    </header>
+    <main class='main'>
+      <form method="POST" action="add_register">
+        {% csrf_token %}
+        <div class='register'>
+          <div class='input_login'>
+            <span class='label'>{{ form.login.label }}</span>
+            {{ form.login }}
+          </div>
+          <div class='input_password'>
+            <span class='label'>{{ form.password.label }}</span>
+            {{ form.password }}
+          </div>
+          <div class='conf_password'>
+            <span class='label'>{{ form.confirm_pass.label }}</span>
+            {{ form.confirm_pass }}
+          </div>
+        </div>
+        <button type='submit' class='registration' name="login_button"> Зарегистрироваться</button>
+      </form>
+    </main>
+    <footer class='footer'>
+      <!-- <span class='develop_span'> This site is under construction</span>
+      <span class='my_info'> 
+        Created by Baraev Sergey
+        baraev.sergey@mail.ru 
+      </span> -->
+    </footer>
   </body>
 </html>
  
