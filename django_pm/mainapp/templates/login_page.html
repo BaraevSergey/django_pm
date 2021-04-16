@@ -7,36 +7,20 @@
     <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
   </head>
   <body>
-    <header class='header'>
-      <!-- тут надо замочек + кнопку регистрации -->
-    </header>
-    <main class='main'>
-        <form method="POST" action="authority">
-          {% csrf_token %}
-          <div class='authoruty'>
-            <div class='input_login'>
-              <span class='label'>{{ form.login.label }}</span>
-              {{ form.login }}
-            </div>
-            <div class='input_password'>
-              <span class='label'>{{ form.password.label }}</span>
-              {{ form.password }}
-            </div>
-            <div class='container__with_buttons'>
-              <button type='submit' class='login' name="login_button"> Войти </button>
-              <button type='submit' class='password' name="register_button"> Регистрация </button>
-            </div>
-         </div>
-        </form>
-    </main>
-    <footer class='footer'>
-      <!-- <span class='develop_span'> This site is under construction</span>
-      <span class='my_info'> 
-        Created by Baraev Sergey
-        baraev.sergey@mail.ru 
-      </span> -->
-    </footer>
-  </div>
+      <form method="POST" action="authority">
+        {% csrf_token %}
+        <button type='submit' name="register_button_header"> Регистрация </button>
+      </form>
+      <form method="POST" action="authority">
+        {% csrf_token %}
+        <span> Добро пожаловать </span>
+        {{ form.login.label }}
+        {{ form.login }}
+        {{ form.password.label }}
+        {{ form.password }}
+        <button type='submit' name="login_button"> Войти </button>
+        <button type='submit' name="register_button"> Регистрация</button>
+      </form>
   </body>
 </html>
  

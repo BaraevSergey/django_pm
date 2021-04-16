@@ -8,49 +8,25 @@
     </head>
     <body>
         {%if auth%}
-        <header class='header'>
-            <span class='label'> {{login}} </span>
-            <form method="POST" action="exit">
+            <span> Ваш аккаунт: {{login}} </span>
+            <form method="POST" action="../../exit">
                 {% csrf_token %}
                 <button name='exit'>
                   Выход
                 </button>
               </form>
-        </header>
-        <main class='main'>
             <form method="POST" action='../../edit/{{id}}/'>
                 {% csrf_token %}
-                <div class='edit'>
-                    
-                    <span class='label'> Карточка редактирования сайта {{ form.site.value }}</span>
-                    
-                    <div class='site_name'>
-                        <span class='label'>{{ form.site.label }}</span>
-                        {{ form.site }}
-                    </div>
-
-                    <div class='site_name'>
-                        <span class='label'>{{ form.login.label }}</span>
-                        {{ form.login }}
-                    </div>
-
-                    <div class='site_name'>
-                        <span class='label'>{{ form.password.label }}</span>
-                        {{ form.password }}
-                    </div>
-
-
-                    <button type='submit' class='edit_button' name="edit" value="Редактировать"/> 
-                </div>
+                <span> Редактирование сайта: {{ form.site.value }}</span>
+                {{ form.site.label }}
+                {{ form.site }}
+                {{ form.login.label }}
+                {{ form.login }}
+                {{ form.password.label }}
+                {{ form.password }}
+                <button type='submit' name="cancel"> Отмена </button>
+                <button type='submit' name="edit"> Редактировать </button>
             </form>
-        </main>
-        <footer class='footer'>
-            <!-- <span class='develop_span'> This site is under construction</span>
-            <span class='my_info'> 
-              Created by Baraev Sergey
-              baraev.sergey@mail.ru 
-            </span> -->
-        </footer>
         {%else%}
             Нет авторизации
         {%endif%}

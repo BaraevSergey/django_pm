@@ -8,52 +8,34 @@
   </head>
   <body>
     {%if auth%}
-    <header class='header'>
-      <div class='test'>
-        <span class='label account_name'> Ваш аккаунт: {{login}} </span>
-        <form method="POST" action="exit">
-          {% csrf_token %}
-          <button class='button_exit colors_exit' name='exit'>
-            Выход
-          </button>
-        </form>
-      </div>
-    </header>
-      
-    <main class='main'>
-      
-      <div class='main_content'>
-        <div class='table_with_sites'>
-          <table >
-            {% for site in all_sites%}
-            <tr>
-              <form method="POST" action="action_row/{{site.id}}/">
-                {% csrf_token %}
-                <td name='id' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
-                <td> {{site.name}} </td>
-                <td> {{site.login}} </td>
-                <td> {{site.password}} </td>
-                <td> <button name='edit'  class='button_in_table'> Edit </button></td>
-                <td> <button name='delete' class='button_in_table'> Delete </button></td>
-              </form>
-              <td> <button id='view' class='button_in_table'> View </button></td>
-            </tr>
-            {% endfor %}
-          </table>
-        </div>
-        <form method="POST" action="add_site_redirect">
-          {% csrf_token %}
-          <button name='add_site' class='add_new_site'>Добавить сайт</button>
-        </form>
-      </div>
-    </main>
-    <footer class='footer'>
-      <!-- <span class='develop_span'> This site is under construction</span>
-      <span class='my_info'> 
-        Created by Baraev Sergey
-        baraev.sergey@mail.ru 
-      </span> -->
-  </footer>
+      <span> Ваш аккаунт: {{login}} </span>
+      <form method="POST" action="exit">
+        {% csrf_token %}
+        <button name='exit'>
+          Выход
+        </button>
+      </form>
+
+      <table >
+        {% for site in all_sites%}
+        <tr>
+          <form method="POST" action="action_row/{{site.id}}/">
+            {% csrf_token %}
+            <td name='id' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
+            <td> {{site.name}} </td>
+            <td> {{site.login}} </td>
+            <td> {{site.password}} </td>
+            <td> <button name='edit'> Редактировать </button></td>
+            <td> <button name='delete' > Удалить </button></td>
+          </form>
+          <td> <button id='view'> Отобразить </button></td>
+        </tr>
+        {% endfor %}
+      </table>
+      <form method="POST" action="add_site_redirect">
+        {% csrf_token %}
+        <button name='add_site'>Добавить сайт</button>
+      </form>
     {%else%}
       Нет авторизации
     {%endif%}

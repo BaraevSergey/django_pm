@@ -40,27 +40,29 @@ def authority(request): #проверка авторизации
                 return redirect(main_page) #если пара логин-пароль совпала, то идём на страницу с паролями
             else:
                     return redirect(login_page) #если пароль не верный, то обновим логин пейдж
-        elif 'register_button' in request.POST: #если кнопка регистрации то редиректнем на страницу регистрации
+        elif 'register_button' or 'register_button_header' in request.POST: #если кнопка регистрации то редиректнем на страницу регистрации
             return redirect(register_page)
 
 def add_info(request):#добавление сайта со страницы добавления
     if request.method == "POST":
-        form = InputForm()
-        if form.is_valid:
-            name_form = request.POST.get("name", "")
-            login_form = request.POST.get("login", "") 
-            pass_form = request.POST.get("password", "")
-            
-            ciph_pass = cipher_password(request, pass_form)
-
-            B = SiteInfo(
-                key_login = request.session['user_key'],
-                name = name_form,
-                login=login_form, 
-                password = ciph_pass
-                )
-            B.save()
-        return redirect(main_page)
+        if 'login_button' in request.POST:
+            form = InputForm()
+            if form.is_valid:
+                name_form = request.POST.get("name", "")
+                login_form = request.POST.get("login", "") 
+                pass_form = request.POST.get("password", "")
+                
+                ciph_pass = cipher_password(request, pass_form)
+                B = SiteInfo(
+                    key_login = request.session['user_key'],
+                    name = name_form,
+                    login=login_form, 
+                    password = ciph_pass
+                    )
+                B.save()
+            return redirect(main_page)
+        elif 'cancel' in request.POST:
+            return redirect(main_page)
     else: 
         form = InputForm()
         return redirect(open_add_site)
@@ -180,11 +182,14 @@ def add_site_redirect(request):
 
 def edit(request, id):
     if request.method == "POST":
-        new_site = request.POST.get("site")
-        new_login = request.POST.get("login")
-        new_password= cipher_password(request, request.POST.get("password"))
-        SiteInfo.objects.filter(pk=id).update(name = new_site, login = new_login, password = new_password)
-        return redirect(main_page)
+        if 'edit' in request.POST:
+            new_site = request.POST.get("site")
+            new_login = request.POST.get("login")
+            new_password= cipher_password(request, request.POST.get("password"))
+            SiteInfo.objects.filter(pk=id).update(name = new_site, login = new_login, password = new_password)
+            return redirect(main_page)
+        elif 'cancel' in request.POST:
+            return redirect(main_page)
 
 def hash_plus_salt(message, salt):#хэширование пароля + соль
     hash = hashlib.sha512(message.encode('utf-8')).hexdigest()
