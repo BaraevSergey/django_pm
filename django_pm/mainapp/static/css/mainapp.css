@@ -12,6 +12,16 @@ code {
     monospace;
 }
 
+.test {
+  display:flex;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  justify-content: space-between;
+  width: 30%;
+}
+
 .header {
   display: flex;
   width: 100vw;
@@ -65,7 +75,7 @@ code {
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.login, .password {
+.login, .password, .registration, .edit_button, .add_new_site, .button_exit  {
   display: inline-block;
   font-weight: 400;
   line-height: 1.5;
@@ -78,13 +88,20 @@ code {
   user-select: none;
   border: 1px solid transparent;
   padding: .375rem .75rem;
-  font-size: 1rem;
+  font-size: 2rem;
   border-radius: .25rem;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   flex-grow: 2;
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.colors_exit {
+  background-color: #78FFE7;
+  color: #5A47AB;
+}
+
+
 
 .container__with_buttons {
   display: flex;
@@ -106,6 +123,10 @@ code {
   color: #2F80ED;
 }
 
+.account_name {
+  color: white;
+}
+
 .input_password, .input_login, .conf_password {
   display: flex;
   flex-direction: column;
@@ -114,8 +135,45 @@ code {
 }
 
 
-/* особые классы для страницы регистрации */
-.registration, .edit_button {
+
+.main_content{
+  overflow: auto;
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1200px;
+  height: 600px;
+}
+
+.table_with_sites{
+  overflow: auto;
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1200px;
+  height: 500px;
+}
+
+table {
+  font-size: 14px;
+  border-radius: 10px;
+  border-spacing: 0;
+  text-align: center;
+}
+
+th, td {
+  border-style: solid;
+  border-width: 0.5px 0.5px 0.5px 0.5px;
+  border-color: black;
+  padding: 10px 20px;
+  background: #cb68df;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.button_in_table {
   display: inline-block;
   font-weight: 400;
   line-height: 1.5;
@@ -128,7 +186,17 @@ code {
   user-select: none;
   border: 1px solid transparent;
   padding: .375rem .75rem;
-  font-size: 2rem;
+  font-size: 1rem;
   border-radius: .25rem;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+@media (max-width:1500px){
+  .test {
+    width: 50%;
+  }
+  .main_content, .table_with_sites{
+    width: 900px;
+    height: 600px;
+  }
 }

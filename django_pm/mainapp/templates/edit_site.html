@@ -9,7 +9,13 @@
     <body>
         {%if auth%}
         <header class='header'>
-            <!-- тут надо замочек + кнопку регистрации -->
+            <span class='label'> {{login}} </span>
+            <form method="POST" action="exit">
+                {% csrf_token %}
+                <button name='exit'>
+                  Выход
+                </button>
+              </form>
         </header>
         <main class='main'>
             <form method="POST" action='../../edit/{{id}}/'>
@@ -17,6 +23,7 @@
                 <div class='edit'>
                     
                     <span class='label'> Карточка редактирования сайта {{ form.site.value }}</span>
+                    
                     <div class='site_name'>
                         <span class='label'>{{ form.site.label }}</span>
                         {{ form.site }}
@@ -33,7 +40,7 @@
                     </div>
 
 
-                    <input type='submit' class='edit_button' name="edit" value="Редактировать"/> 
+                    <button type='submit' class='edit_button' name="edit" value="Редактировать"/> 
                 </div>
             </form>
         </main>
