@@ -1,21 +1,21 @@
 from django import forms
 
 class InputForm(forms.Form):
-    name = forms.CharField(label="Ваш сайт")
-    login = forms.CharField(label="Ваш логин")
-    password = forms.CharField(label="Ваш пароль", min_length=5, widget=forms.PasswordInput())
+    name = forms.CharField(required=False, label="Название сайта")
+    login = forms.CharField(required=False, label="Логин для авторизации")
+    password = forms.CharField(required=False,  label="Пароль", min_length=5, widget=forms.PasswordInput())
 
 class LoginForm(forms.Form):
-    login = forms.CharField(label="Введите логин")
-    password = forms.CharField(label="Введите пароль", min_length=5, widget=forms.PasswordInput())
+    login = forms.CharField(required=False, label="Логин")
+    password = forms.CharField(required=False, label="Пароль", min_length=5, widget=forms.PasswordInput())
 
 class RegisterForm(forms.Form):
-    login = forms.CharField(label="Введите логин")
-    password = forms.CharField(label="Введите пароль", min_length=5, widget=forms.PasswordInput())
-    confirm_pass = forms.CharField(label="Подтвердите пароль", min_length=5, widget=forms.PasswordInput())
+    login = forms.CharField(required=False, label="Логин")
+    password = forms.CharField(required=False, label="Пароль", min_length=5, widget=forms.PasswordInput())
+    confirm_pass = forms.CharField(required=False, label="Подтвердите пароль", min_length=5, widget=forms.PasswordInput())
 
 
 class EditForm(forms.Form):
-    site = forms.CharField(label = "Название сайта")
-    login = forms.CharField(label = "Ваш логин")
-    password = forms.CharField(label = "Ваш пароль")
+    site = forms.CharField(required=False, label = "Название сайта")
+    login = forms.CharField(required=False, label = "Логин для авторизации")
+    password = forms.CharField(required=False, label = "Пароль")

@@ -1,202 +1,278 @@
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+
+*, html, body{
+	box-sizing: border-box;	
+	margin:0;
 }
 
-.test {
-  display:flex;
-  overflow: auto;
-  margin-left: auto;
-  margin-right: auto;
-  align-items: center;
-  justify-content: space-between;
-  width: 30%;
+header{
+	position:relative;
+	width: 100vw;
+	height: 8vh;
+	background-color: #2F80ED ;
+	
 }
 
-.header {
-  display: flex;
-  width: 100vw;
-  height: 8vh;
-  background-color: #2F80ED ;
-  justify-content: space-between;
+header > span{
+	position: absolute;
+	margin:10px;
+	font-family: 'Inter', sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 36px;
+	line-height: 44px;
+	color:white;
 }
 
-.main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 81vh;
-  background-color: #F0FBF7;
+footer{
+	background: #2F80ED;
+	width: 100vw;
+	height: 11vh;
+	background-color: #2F80ED ;
 }
 
-.footer{
-  display: flex;
-  justify-content: space-around;
-  width: 100vw;
-  height: 11vh;
-  background-color: #2F80ED;
+header > form{
+	display:flex;
+	justify-content: flex-end;
 }
 
-.develop_span {
-  font-size: 22px;
-  color: #FFFFFF;
-  margin-top: 30px; /* костыльное гавно чтобы было посередине */
+header > form > button{
+	margin-right: 60px;
+	margin-top: 8px;
+	padding: 10px 44px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 30px;
+	line-height: 41px;
+	background: #78FFE7;
+	border-radius: 12px;
+	border:0;
 }
 
-.my_info{
-  font-size: 22px;
-  color: #FFFFFF;
-  margin-top: 30px; /* костыльное гавно чтобы было посередине */
-}
-
-#id_login, #id_password, #id_confirm_pass, #id_site { 
-  display: block;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  width: 95%;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  appearance: none;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-.login, .password, .registration, .edit_button, .add_new_site, .button_exit  {
-  display: inline-block;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #ffffff;
-  background-color: #2F80ED;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: .375rem .75rem;
-  font-size: 2rem;
-  border-radius: .25rem;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-  flex-grow: 2;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.colors_exit {
-  background-color: #78FFE7;
-  color: #5A47AB;
+header > form > button:hover,
+header > form > button:focus{
+	background: #59b9a3;
 }
 
 
-
-.container__with_buttons {
-  display: flex;
-  flex-direction: row;
+section{
+	display: flex;
+	justify-content: center;
+	width: 100vw;
+	height: 81vh;
+	background-color: #ffffff;
 }
 
-.authoruty, .register, .edit {
-  display: flex;
-  justify-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 800px;
-  height: 500px;
+section > form{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
-.label {
-  margin-bottom: 20px;
-  font-size: 30px;
-  color: #2F80ED;
+.main_content {
+	display: flex;
+	flex-direction: column;
+	width:80%;
+	margin-top:40px;
+	margin-bottom:40px;
 }
 
-.account_name {
-  color: white;
+.section_main > table{
+	border-collapse: collapse;
+	width:100%;
+
+	border: 1px solid #000000;
 }
 
-.input_password, .input_login, .conf_password {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 300px;
+.section_main{
+	display: flex;
+	width:100%;
+	flex-direction: column;
+	overflow: auto;
+}
+
+td, th{
+	padding:5px;
+	border-bottom: 1px solid #000000;
+}
+
+tr > th{
+	width:15%;
+	font-family: 'Inter', sans-serif;
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 32px;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: #606F89;
+	background: #C2ADAD;
+}
+
+tr > td {
+	width:15%;
+	text-align:center;
+	font-family: 'Inter', sans-serif;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 32px;
+	color: #2E3B52;
 }
 
 
-
-.main_content{
-  overflow: auto;
-  display: flex;
-  justify-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 1200px;
-  height: 600px;
+td > button{
+	border: 0;
+	background: #ffffff;
 }
 
-.table_with_sites{
-  overflow: auto;
-  display: flex;
-  justify-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 1200px;
-  height: 500px;
+.label__welcome,
+.label__register,
+.label__addSite,
+.label__editSite{
+	font-family: 'Nunito', sans-serif;
+	font-weight: bold;
+	font-size: 28px;
+	line-height: 50px;
+	color: #2F80ED;
+    margin-top: 160px;
 }
 
-table {
-  font-size: 14px;
-  border-radius: 10px;
-  border-spacing: 0;
-  text-align: center;
+.label__register,
+.label__addSite{
+    margin-top: 120px;
 }
 
-th, td {
-  border-style: solid;
-  border-width: 0.5px 0.5px 0.5px 0.5px;
-  border-color: black;
-  padding: 10px 20px;
-  background: #cb68df;
-  font-size: 16px;
-  font-weight: bold;
+.label__login{
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 18px;
+	line-height: 33px;
+	color: #2F80ED;
+	margin-top: 5px;
 }
 
-.button_in_table {
-  display: inline-block;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #ffffff;
-  background-color: #2F80ED;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  border-radius: .25rem;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+#id_login:hover,
+#id_login:focus,
+#id_password:hover,
+#id_password:focus,
+#id_confirm_pass:hover,
+#id_confirm_pass:focus,
+#id_name:hover,
+#id_name:focus,
+#id_site:hover,
+#id_site:focus{
+	border: 2px solid #277be9;
+	outline:none;
 }
 
-@media (max-width:1500px){
-  .test {
-    width: 50%;
-  }
-  .main_content, .table_with_sites{
-    width: 900px;
-    height: 600px;
-  }
+#id_login,
+#id_password,
+#id_confirm_pass,
+#id_name,
+#id_site{
+	background: rgba(255, 255, 255, 0.35);
+	border: 1px solid #2F80ED;
+	border-radius: 10px;
+	width: 100%;
+	height: 53px;
+}
+
+.login_buttons > button,
+.register_buttons > button,
+.site_buttons > button,
+.main_button > form > button{
+	background: #2F80ED;
+	border: 1px solid #B78233;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 7px;
+	font-family: Nunito;
+	font-weight: normal;
+	font-size: 36px;
+	line-height: 80px;
+	color: white;
+	width: 280px;
+}
+
+.login_buttons > button:hover,
+.login_buttons > button:focus,
+.register_buttons > button:hover,
+.register_buttons > button:focus,
+.site_buttons > button:last-child:hover,
+.site_buttons > button:last-child:focus,
+.main_button > form > button:hover,
+.main_button > form > button:focus{
+	border: 1px solid #a7772f;
+	background: #2a72cf;
+}
+
+.login_buttons{
+	margin-top: 70px;
+}
+
+.login_buttons > button:first-child,
+.site_buttons > button:first-child{
+	margin-right: 20px;
+}
+
+.login_buttons > button:last-child,
+.site_buttons > button:last-child{
+	margin-left: 20px;
+}
+
+.register_buttons{
+	display: flex;
+    justify-content: flex-end;
+	margin-top: 41px;
+}
+
+.register_buttons > button{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-radius: 7px;
+    font-size: 26px;
+    line-height: 45px;
+	width: 360px;
+}
+
+.site_buttons{
+	margin-top:30px;
+}
+
+.site_buttons > button{
+	line-height: 75px;
+}
+
+.site_buttons > button:first-child{
+	background: #ED512F;
+}
+
+.site_buttons > button:first-child:hover,
+.site_buttons > button:first-child:focus{
+	background: #d64c2d;
+	border: 1px solid #a7772f;
+
+}
+
+.main_button > form > button{
+	display: flex;
+	font-size: 16px;
+    line-height: 53px;
+	width: 180px;
+}
+
+.main_button > form > button > img{
+	margin: auto;
+}
+
+.main_button > form > button > span{
+	margin: auto;
+}
+
+.main_button{
+	display:flex;
+	justify-content: flex-end;
+	margin-top: 40px;
 }
