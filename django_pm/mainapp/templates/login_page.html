@@ -7,20 +7,29 @@
     <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
   </head>
   <body>
+	  <header>
+		<form method="POST" action="authority">
+        {% csrf_token %}
+			<button type='submit' name="register_button_header"> Регистрация </button>
+		</form>
+	  </header>
+    <section>
       <form method="POST" action="authority">
         {% csrf_token %}
-        <button type='submit' name="register_button_header"> Регистрация </button>
-      </form>
-      <form method="POST" action="authority">
-        {% csrf_token %}
-        <span> Добро пожаловать </span>
-        {{ form.login.label }}
+        <span class="label__welcome"> Добро пожаловать </span>
+        <span class="label__login">Логин</span>
+        <!-- {{ form.login.label }} -->
         {{ form.login }}
-        {{ form.password.label }}
+        <span class="label__password">Пароль</span>
+        <!-- {{ form.password.label }} -->
         {{ form.password }}
-        <button type='submit' name="login_button"> Войти </button>
-        <button type='submit' name="register_button"> Регистрация</button>
+        <div class="buttons">
+          <button type='submit' name="login_button"> Войти </button>
+          <button type='submit' name="register_button"> Регистрация</button>
+        </div>
       </form>
+    </section>
+	  <footer></footer>
   </body>
 </html>
  
