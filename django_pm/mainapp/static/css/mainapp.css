@@ -12,6 +12,7 @@ header{
 	position:relative;
 	background: #2F80ED;
 	height: 80px;
+	
 }
 
 header > span{
@@ -58,6 +59,7 @@ header > form > button:focus{
 section{
 	display: flex;
 	justify-content: center;
+	
 }
 
 section > form{
@@ -66,9 +68,58 @@ section > form{
 	height: 100%;
 }
 
+.section_main > table{
+	border-collapse: collapse;
+	width:100%;
+	margin-top:40px;
+	margin-bottom:40px;
+	border: 1px solid #000000;
+}
+
+.section_main{
+	display: flex;
+	width:80%;
+	flex-direction: column;
+}
+
+td, th{
+	padding:5px;
+	border-bottom: 1px solid #000000;
+}
+
+tr > th{
+	width:15%;
+	font-family: 'Inter', sans-serif;
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 32px;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: #606F89;
+	background: #C2ADAD;
+}
+
+tr > td {
+	width:15%;
+	text-align:center;
+	font-family: 'Inter', sans-serif;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 32px;
+	color: #2E3B52;
+}
+
+
+td > button{
+	border: 0;
+	background: #ffffff;
+}
+
 .label__welcome,
 .label__register,
-.label__addSite{
+.label__addSite,
+.label__editSite{
 	font-family: 'Nunito', sans-serif;
 	font-weight: bold;
 	font-size: 28px;
@@ -99,7 +150,9 @@ section > form{
 #id_confirm_pass:hover,
 #id_confirm_pass:focus,
 #id_name:hover,
-#id_name:focus{
+#id_name:focus,
+#id_site:hover,
+#id_site:focus{
 	border: 2px solid #277be9;
 	outline:none;
 }
@@ -107,7 +160,8 @@ section > form{
 #id_login,
 #id_password,
 #id_confirm_pass,
-#id_name{
+#id_name,
+#id_site{
 	background: rgba(255, 255, 255, 0.35);
 	border: 1px solid #2F80ED;
 	border-radius: 10px;
@@ -117,7 +171,8 @@ section > form{
 
 .login_buttons > button,
 .register_buttons > button,
-.addSite_buttons > button{
+.site_buttons > button,
+.main_button > form > button{
 	background: #2F80ED;
 	border: 1px solid #B78233;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -134,8 +189,10 @@ section > form{
 .login_buttons > button:focus,
 .register_buttons > button:hover,
 .register_buttons > button:focus,
-.addSite_buttons > button:last-child:hover,
-.addSite_buttons > button:last-child:focus{
+.site_buttons > button:last-child:hover,
+.site_buttons > button:last-child:focus,
+.main_button > form > button:hover,
+.main_button > form > button:focus{
 	border: 1px solid #a7772f;
 	background: #2a72cf;
 }
@@ -145,12 +202,12 @@ section > form{
 }
 
 .login_buttons > button:first-child,
-.addSite_buttons > button:first-child{
+.site_buttons > button:first-child{
 	margin-right: 20px;
 }
 
 .login_buttons > button:last-child,
-.addSite_buttons > button:last-child{
+.site_buttons > button:last-child{
 	margin-left: 20px;
 }
 
@@ -169,21 +226,32 @@ section > form{
 	width: 360px;
 }
 
-.addSite_buttons{
+.site_buttons{
 	margin-top:30px;
 }
 
-.addSite_buttons > button{
+.site_buttons > button{
 	line-height: 75px;
 }
 
-.addSite_buttons > button:first-child{
+.site_buttons > button:first-child{
 	background: #ED512F;
 }
 
-.addSite_buttons > button:first-child:hover,
-.addSite_buttons > button:first-child:focus{
+.site_buttons > button:first-child:hover,
+.site_buttons > button:first-child:focus{
 	background: #d64c2d;
 	border: 1px solid #a7772f;
 
+}
+
+.main_button > form > button{
+	font-size: 16px;
+    line-height: 53px;
+	width: 180px;
+}
+
+.main_button{
+	display:flex;
+	justify-content: flex-end;
 }

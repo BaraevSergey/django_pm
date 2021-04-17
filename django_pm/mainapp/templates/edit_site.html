@@ -1,34 +1,48 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Django_pm</title>
-        <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
-    </head>
-    <body>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Django_pm</title>
+    <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css">
+    </link>
+</head>
+
+<body>
+    <header>
         {%if auth%}
-            <span> Ваш аккаунт: {{login}} </span>
-            <form method="POST" action="../../exit">
-                {% csrf_token %}
-                <button name='exit'>
-                  Выход
-                </button>
-              </form>
-            <form method="POST" action='../../edit/{{id}}/'>
-                {% csrf_token %}
-                <span> Редактирование сайта: {{ form.site.value }}</span>
-                {{ form.site.label }}
-                {{ form.site }}
-                {{ form.login.label }}
-                {{ form.login }}
-                {{ form.password.label }}
-                {{ form.password }}
+        <span> Ваш аккаунт: {{login}} </span>
+        <form method="POST" action="../../exit">
+            {% csrf_token %}
+            <button name='exit'>
+                Выход
+            </button>
+        </form>
+    </header>
+    <section>
+        <form method="POST" action='../../edit/{{id}}/'>
+            {% csrf_token %}
+            <span class="label__editSite"> Редактирование сайта: {{ form.site.value }}</span>
+            <span class="label__login">Название сайта</span>
+            <!-- {{ form.site.label }} -->
+            {{ form.site }}
+            <span class="label__login">Логин для авторизации</span>
+            <!-- {{ form.login.label }} -->
+            {{ form.login }}
+            <span class="label__login">Пароль</span>
+            <!-- {{ form.password.label }} -->
+            {{ form.password }}
+            <div class="site_buttons">
                 <button type='submit' name="cancel"> Отмена </button>
                 <button type='submit' name="edit"> Редактировать </button>
-            </form>
+            </div>
+        </form>
         {%else%}
-            Нет авторизации
+        Нет авторизации
         {%endif%}
-    </body>
+    </section>
+    <footer></footer>
+</body>
+
 </html>
