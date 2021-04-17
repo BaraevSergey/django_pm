@@ -1,43 +1,52 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Django_pm</title>
-    <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
-  </head>
-  <body>
-    {%if auth%}
-      <span> Ваш аккаунт: {{login}} </span>
-      <form method="POST" action="exit">
-        {% csrf_token %}
-        <button name='exit'>
-          Выход
-        </button>
-      </form>
 
-      <table >
-        {% for site in all_sites%}
-        <tr>
-          <form method="POST" action="action_row/{{site.id}}/">
-            {% csrf_token %}
-            <td name='id' style = "display:none">{{site.id}}</td> <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
-            <td> {{site.name}} </td>
-            <td> {{site.login}} </td>
-            <td> {{site.password}} </td>
-            <td> <button name='edit'> Редактировать </button></td>
-            <td> <button name='delete' > Удалить </button></td>
-          </form>
-          <td> <button id='view'> Отобразить </button></td>
-        </tr>
-        {% endfor %}
-      </table>
-      <form method="POST" action="add_site_redirect">
-        {% csrf_token %}
-        <button name='add_site'>Добавить сайт</button>
-      </form>
+<head>
+  <meta charset="utf-8" />
+  <title>Django_pm</title>
+  <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css">
+  </link>
+</head>
+
+<body>
+  <header>
+    {%if auth%}
+    <span> Ваш аккаунт: {{login}} </span>
+    <form method="POST" action="exit">
+      {% csrf_token %}
+      <button name='exit'>
+        Выход
+      </button>
+    </form>
+  </header>
+  <section>
+    <table>
+      {% for site in all_sites%}
+      <tr>
+        <form method="POST" action="action_row/{{site.id}}/">
+          {% csrf_token %}
+          <td name='id' style="display:none">{{site.id}}</td>
+          <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
+          <td> {{site.name}} </td>
+          <td> {{site.login}} </td>
+          <td> {{site.password}} </td>
+          <td> <button name='edit'> Редактировать </button></td>
+          <td> <button name='delete'> Удалить </button></td>
+        </form>
+        <td> <button id='view'> Отобразить </button></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <form method="POST" action="add_site_redirect">
+      {% csrf_token %}
+      <button name='add_site'>Добавить сайт</button>
+    </form>
     {%else%}
-      Нет авторизации
+    Нет авторизации
     {%endif%}
-  </body>
-</html> 
+  </section>
+  <footer></footer>
+</body>
+
+</html>

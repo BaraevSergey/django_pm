@@ -1,35 +1,38 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Django_pm</title>
-    <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css"></link>
-  </head>
-  <body>
-	  <header>
-		<form method="POST" action="authority">
-        {% csrf_token %}
-			<button type='submit' name="register_button_header"> Регистрация </button>
-		</form>
-	  </header>
-    <section>
-      <form method="POST" action="authority">
-        {% csrf_token %}
-        <span class="label__welcome"> Добро пожаловать </span>
-        <span class="label__login">Логин</span>
-        <!-- {{ form.login.label }} -->
-        {{ form.login }}
-        <span class="label__password">Пароль</span>
-        <!-- {{ form.password.label }} -->
-        {{ form.password }}
-        <div class="buttons">
-          <button type='submit' name="login_button"> Войти </button>
-          <button type='submit' name="register_button"> Регистрация</button>
-        </div>
-      </form>
-    </section>
-	  <footer></footer>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Django_pm</title>
+  <link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css">
+  </link>
+</head>
+
+<body>
+  <header>
+    <form method="POST" action="authority">
+      {% csrf_token %}
+      <button type='submit' name="register_button_header"> Регистрация </button>
+    </form>
+  </header>
+  <section>
+    <form method="POST" action="authority">
+      {% csrf_token %}
+      <span class="label__welcome"> Добро пожаловать </span>
+      <span class="label__login">Логин</span>
+      <!-- {{ form.login.label }} -->
+      {{ form.login }}
+      <span class="label__login">Пароль</span>
+      <!-- {{ form.password.label }} -->
+      {{ form.password }}
+      <div class="login_buttons">
+        <button type='submit' name="login_button"> Войти </button>
+        <button type='submit' name="register_button"> Регистрация</button>
+      </div>
+    </form>
+  </section>
+  <footer></footer>
+</body>
+
 </html>
- 
