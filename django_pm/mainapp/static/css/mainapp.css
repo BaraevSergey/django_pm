@@ -63,7 +63,6 @@ section{
 	width: 100vw;
 	height: 81vh;
 	background-color: #ffffff;
-	
 }
 
 section > form{
@@ -72,17 +71,24 @@ section > form{
 	height: 100%;
 }
 
+.main_content {
+	display: flex;
+	flex-direction: column;
+	width:80%;
+	margin-top:40px;
+	margin-bottom:40px;
+}
+
 .section_main > table{
 	border-collapse: collapse;
 	width:100%;
-	margin-top:40px;
-	margin-bottom:40px;
+
 	border: 1px solid #000000;
 }
 
 .section_main{
 	display: flex;
-	width:80%;
+	width:100%;
 	flex-direction: column;
 	overflow: auto;
 }
@@ -268,4 +274,5 @@ td > button{
 .main_button{
 	display:flex;
 	justify-content: flex-end;
+	margin-top: 40px;
 }

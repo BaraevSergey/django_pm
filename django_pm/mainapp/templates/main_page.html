@@ -21,41 +21,43 @@
     </form>
   </header>
   <section>
-    <div class="section_main">
-      <table>
+    <div class='main_content'>
+      <div class="section_main">
+        <table>
+          <tr>
+            <th>Сайт</th>
+            <th>Логин</th>
+            <th>Пароль</th>
+            <th></th>
+          </tr>
+        {% for site in all_sites%}
         <tr>
-          <th>Сайт</th>
-          <th>Логин</th>
-          <th>Пароль</th>
-          <th></th>
-        </tr>
-      {% for site in all_sites%}
-      <tr>
-        <form method="POST" action="action_row/{{site.id}}/">
+          <form method="POST" action="action_row/{{site.id}}/">
+            {% csrf_token %}
+            <td name='id' style="display:none">{{site.id}}</td>
+            <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
+            <td> {{site.name}} </td>
+            <td> {{site.login}} </td>
+            <td> {{site.password}} </td>
+            <td> 
+              <button name='edit'><img src="{% static 'images/edit-2.svg' %}" alt="Редактировать"></button>
+              <button name='delete'><img src="{% static 'images/trash.svg' %}" alt="Удалить"></button>
+              <button id='view'><img src="{% static 'images/eye.svg' %}" alt="Отобразить"></button>
+              <button id="copy"><img src="{% static 'images/copy.svg' %}" alt="Копировать"></button></td>
+          </form>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="main_button">
+        <form method="POST" action="add_site_redirect">
           {% csrf_token %}
-          <td name='id' style="display:none">{{site.id}}</td>
-          <!-- добавил, но не отображаем(надо для удаления/редактирования) -->
-          <td> {{site.name}} </td>
-          <td> {{site.login}} </td>
-          <td> {{site.password}} </td>
-          <td> 
-            <button name='edit'><img src="{% static 'images/edit-2.svg' %}" alt="Редактировать"></button>
-            <button name='delete'><img src="{% static 'images/trash.svg' %}" alt="Удалить"></button>
-            <button id='view'><img src="{% static 'images/eye.svg' %}" alt="Отобразить"></button>
-            <button id="copy"><img src="{% static 'images/copy.svg' %}" alt="Копировать"></button></td>
+          <button name='add_site'>
+            <img src="{% static 'images/plus-circle.svg' %}" alt="addSite">
+            <span> Добавить сайт </span>
+          </button>
         </form>
-
-      </tr>
-      {% endfor %}
-    </table>
-    <div class="main_button">
-      <form method="POST" action="add_site_redirect">
-        {% csrf_token %}
-        <button name='add_site'>
-          <img src="{% static 'images/plus-circle.svg' %}" alt="addSite">
-          <span> Добавить сайт </span>
-         </button>
-      </form>
+      </div>
     </div>
     {%else%}
       Нет авторизации
