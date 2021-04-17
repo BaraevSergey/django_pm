@@ -10,8 +10,9 @@
 
 header{
 	position:relative;
-	background: #2F80ED;
-	height: 80px;
+	width: 100vw;
+	height: 8vh;
+	background-color: #2F80ED ;
 	
 }
 
@@ -28,9 +29,9 @@ header > span{
 
 footer{
 	background: #2F80ED;
-	height: 100px;
-	position: relative;
-	bottom: -76px;
+	width: 100vw;
+	height: 11vh;
+	background-color: #2F80ED ;
 }
 
 header > form{
@@ -59,6 +60,9 @@ header > form > button:focus{
 section{
 	display: flex;
 	justify-content: center;
+	width: 100vw;
+	height: 81vh;
+	background-color: #ffffff;
 	
 }
 
@@ -80,6 +84,7 @@ section > form{
 	display: flex;
 	width:80%;
 	flex-direction: column;
+	overflow: auto;
 }
 
 td, th{
@@ -125,12 +130,12 @@ td > button{
 	font-size: 28px;
 	line-height: 50px;
 	color: #2F80ED;
-    margin-top: 80px;
+    margin-top: 160px;
 }
 
 .label__register,
 .label__addSite{
-    margin-top: 35px;
+    margin-top: 120px;
 }
 
 .label__login{
@@ -246,9 +251,18 @@ td > button{
 }
 
 .main_button > form > button{
+	display: flex;
 	font-size: 16px;
     line-height: 53px;
 	width: 180px;
+}
+
+.main_button > form > button > img{
+	margin: auto;
+}
+
+.main_button > form > button > span{
+	margin: auto;
 }
 
 .main_button{

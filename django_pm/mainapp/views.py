@@ -165,6 +165,7 @@ def action_row(request, id):
                     
                     "id" : id,
                     "auth" : request.session['auth'],
+                    "login":request.session['Login'],
                     'form' : form
                     
                 }    
